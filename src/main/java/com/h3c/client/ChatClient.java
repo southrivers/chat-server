@@ -12,6 +12,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
@@ -31,6 +32,8 @@ public class ChatClient {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
+                        // size的偏移量和长度
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4));
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
@@ -52,9 +55,11 @@ public class ChatClient {
                             // 这里要放到scanner后面，这样才能实时的获取到对应的状态数据
                             Boolean loginStatus = channel.attr(LOGIN_STATUS).get();
                             if (null != loginStatus && loginStatus) {
-                                MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                                messageRequestPacket.setMessage(nextLine);
-                                channel.writeAndFlush(messageRequestPacket);
+                                for (int i = 0; i < 100; i++) {
+                                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
+                                    messageRequestPacket.setMessage(nextLine + i);
+                                    channel.writeAndFlush(messageRequestPacket);
+                                }
                             } else {
                                 System.out.println("还没有登陆。。。。。");
                                 LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
