@@ -55,10 +55,14 @@ public class ChatClient {
                             // 这里要放到scanner后面，这样才能实时的获取到对应的状态数据
                             Boolean loginStatus = channel.attr(LOGIN_STATUS).get();
                             if (null != loginStatus && loginStatus) {
-                                for (int i = 0; i < 100; i++) {
-                                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                                    messageRequestPacket.setMessage(nextLine + i);
-                                    channel.writeAndFlush(messageRequestPacket);
+                                if (channel.isActive() && channel.isWritable()) {
+                                    for (int i = 0; i < 100; i++) {
+                                        MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
+                                        messageRequestPacket.setMessage(nextLine + i);
+                                        channel.writeAndFlush(messageRequestPacket);
+                                    }
+                                } else {
+                                    break;
                                 }
                             } else {
                                 System.out.println("还没有登陆。。。。。");

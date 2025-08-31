@@ -1,9 +1,6 @@
 package com.h3c.server;
 
-import com.h3c.server.handler.LoginRequestHandler;
-import com.h3c.server.handler.MessageRequestHandler;
-import com.h3c.server.handler.PacketDecoder;
-import com.h3c.server.handler.PacketEncoder;
+import com.h3c.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -30,6 +27,7 @@ public class ChatServer {
 //                        nioSocketChannel.pipeline().addLast(new PacketEncoder());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new AuthHandler());
                         nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }

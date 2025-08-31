@@ -5,6 +5,8 @@ import com.h3c.packet.impl.LoginResponsePacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import static com.h3c.Constant.LOGIN_STATUS;
+
 /**
  * 说明这里是只有匹配的消息（泛型）才会进到对应的方法，不匹配的消息会继续向后传播，这个用通用的channelhandler也可以实现，只是需要用if else（包含向后处理的逻辑）
  */
@@ -16,6 +18,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         if (msg.getUserName().equals("wangershuai") && msg.getPassword().equals("password")) {
             loginResponsePacket.setLogin(true);
             loginResponsePacket.setReason("用户名密码正确");
+            ctx.channel().attr(LOGIN_STATUS).set(true);
         } else {
             loginResponsePacket.setLogin(false);
             loginResponsePacket.setReason("用户名密码错误");
