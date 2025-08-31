@@ -36,8 +36,8 @@ public class ChatClient {
                         // size的偏移量和长度
                         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4));
                         ch.pipeline().addLast(new PacketDecoder());
-                        // 添加定时检测的心跳包，确保服务端不会主动断开客户端的连接
-                        ch.pipeline().addLast(new HeartBeatHandler());
+                        // 添加定时检测的心跳包，确保服务端不会主动断开客户端的连接，心跳要放到最后
+//                        ch.pipeline().addLast(new HeartBeatHandler());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());

@@ -22,6 +22,7 @@ public class ChatServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
+                        // 这个对象需要放到最前面，防止前面拦截收不到消息
                         nioSocketChannel.pipeline().addLast(new IMIdleStateHandler());
                         nioSocketChannel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4));
                         // handler中直接调用ctx.write方法的时候需要把encoder放到pipeline的最前面
@@ -29,6 +30,7 @@ public class ChatServer {
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
                         nioSocketChannel.pipeline().addLast(new AuthHandler());
+                        nioSocketChannel.pipeline().addLast(new HeartBeatRequestHandler());
                         nioSocketChannel.pipeline().addLast(new MessageRequestHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }

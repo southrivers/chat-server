@@ -9,4 +9,8 @@ public interface Command {
     byte MESSAGE_REQUEST = 2;
 
     byte MESSAGE_RESPONSE = 3;
+
+    byte HEARTBEAT_REQUEST = 4;
+
+    byte HEARTBEAT_RESPONSE = 5;
 }

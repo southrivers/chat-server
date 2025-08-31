@@ -2,10 +2,7 @@ package com.h3c.serial;
 
 import com.alibaba.fastjson2.JSON;
 import com.h3c.packet.Packet;
-import com.h3c.packet.impl.LoginRequestPacket;
-import com.h3c.packet.impl.LoginResponsePacket;
-import com.h3c.packet.impl.MessageRequestPacket;
-import com.h3c.packet.impl.MessageResponsePacket;
+import com.h3c.packet.impl.*;
 import io.netty.buffer.ByteBuf;
 
 import static com.h3c.packet.Command.*;
@@ -40,6 +37,8 @@ public class JsonSerial implements Serial{
                 return JSON.parseObject(dst, MessageRequestPacket.class);
             case MESSAGE_RESPONSE:
                 return JSON.parseObject(dst, MessageResponsePacket.class);
+            case HEARTBEAT_REQUEST:
+                return JSON.parseObject(dst, HeartBeatRequest.class);
             default:
                 return null;
         }
