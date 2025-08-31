@@ -3,8 +3,11 @@ package com.h3c.server.handler;
 import com.h3c.packet.impl.LoginRequestPacket;
 import com.h3c.packet.impl.LoginResponsePacket;
 import com.h3c.util.Utils;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 
 import static com.h3c.Constant.LOGIN_STATUS;
 import static com.h3c.Constant.USER_NAME;
@@ -12,9 +15,18 @@ import static com.h3c.Constant.USER_NAME;
 /**
  * 说明这里是只有匹配的消息（泛型）才会进到对应的方法，不匹配的消息会继续向后传播，这个用通用的channelhandler也可以实现，只是需要用if else（包含向后处理的逻辑）
  */
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+    // 需要结合shareable的注解一起使用
+    public static LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket msg) throws Exception {
+        // 可以通过channelGroup来实现消息的广播发送
+//        DefaultChannelGroup channels = new DefaultChannelGroup(ctx.executor());
+////        channels.stream().filter(i-> )
+//        channels.writeAndFlush()
         System.out.println(msg);
         LoginResponsePacket loginResponsePacket = new LoginResponsePacket();
         if ((msg.getUserName().equals("wangershuai") || msg.getUserName().equals("wangsanshuai")) && msg.getPassword().equals("password")) {
