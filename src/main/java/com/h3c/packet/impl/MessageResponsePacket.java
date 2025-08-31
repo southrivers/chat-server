@@ -8,6 +8,8 @@ import static com.h3c.packet.Command.MESSAGE_RESPONSE;
 @Data
 public class MessageResponsePacket extends Packet {
 
+    String fromUserName;
+
     String message;
 
     @Override

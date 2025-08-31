@@ -2,8 +2,12 @@ package com.h3c.server.handler;
 
 import com.h3c.packet.impl.MessageRequestPacket;
 import com.h3c.packet.impl.MessageResponsePacket;
+import com.h3c.util.Utils;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+
+import static com.h3c.Constant.USER_NAME;
 
 /**
  *
@@ -14,9 +18,12 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket msg) throws Exception {
+        String toUserName = msg.getToUserName();
+        Channel channel = Utils.map.get(toUserName);
         MessageResponsePacket messageResponsePacket = new MessageResponsePacket();
+        String fromUserName = ctx.channel().attr(USER_NAME).get();
+        messageResponsePacket.setFromUserName(fromUserName);
         messageResponsePacket.setMessage("收到客户端发过来的消息：" +  msg.getMessage());
-        ctx.channel().writeAndFlush(messageResponsePacket);
-//        ctx.writeAndFlush(messageResponsePacket);
+        channel.writeAndFlush(messageResponsePacket);
     }
 }

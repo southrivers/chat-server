@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 import static com.h3c.Constant.LOGIN_STATUS;
 
-public class ChatClient {
+public class ChatClient1 {
 
     public static void main(String[] args) throws InterruptedException {
 

@@ -17,6 +17,8 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         Channel channel = ctx.channel();
         if (Utils.hasLogin(channel)) {
             ctx.pipeline().remove(this);
+            // 需要向后传播消息
+            super.channelRead(ctx, msg);
         } else {
             channel.close();
         }
